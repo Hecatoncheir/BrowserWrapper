@@ -7,30 +7,32 @@ import (
 	"github.com/chromedp/chromedp"
 )
 
-func New(proxyDetails string) *Chrome {
+func New(proxyDetails string, isHeadless bool) *Chrome {
 	chromeContext, chromeContextCancel := context.WithCancel(context.Background())
 
 	var options []chromedp.ExecAllocatorOption
 
+	options = append(chromedp.DefaultExecAllocatorOptions[:])
+	options = append(options,
+		chromedp.DisableGPU,
+		chromedp.Flag("enable-automation", false),
+		chromedp.Flag("restore-on-startup", false),
+	)
+
 	if proxyDetails != "" {
-		options = append(chromedp.DefaultExecAllocatorOptions[:],
-			chromedp.DisableGPU,
+		options = append(options,
 			chromedp.ProxyServer(proxyDetails),
+		)
+	}
+
+	if isHeadless {
+		options = append(options,
 			chromedp.Headless,
-			//chromedp.Flag("headless", false),
-			chromedp.Flag("enable-automation", false),
-			chromedp.Flag("restore-on-startup", false),
 		)
-
 	} else {
-		options = append(chromedp.DefaultExecAllocatorOptions[:],
-			chromedp.DisableGPU,
-			//chromedp.Headless,
+		options = append(options,
 			chromedp.Flag("headless", false),
-			chromedp.Flag("enable-automation", false),
-			chromedp.Flag("restore-on-startup", false),
 		)
-
 	}
 
 	chromeContext, chromeContextCancel = chromedp.NewExecAllocator(chromeContext, options...)
