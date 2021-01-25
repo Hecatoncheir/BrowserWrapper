@@ -12,6 +12,7 @@ import (
 )
 
 type Chrome struct {
+	isClosed            bool
 	chromeContext       context.Context
 	chromeContextCancel context.CancelFunc
 
@@ -140,6 +141,10 @@ func (chrome *Chrome) DownloadFileBySelector(pageUrl, selector, attribute string
 	return bytes, fileName, fileExtension, fileSrc, nil
 }
 
+func (chrome *Chrome) IsClosed() bool {
+	return chrome.isClosed
+}
+
 func (chrome *Chrome) Close() error {
 	for tabNumber := range chrome.Tabs {
 		err := chrome.CloseTab(tabNumber)
@@ -154,6 +159,8 @@ func (chrome *Chrome) Close() error {
 	}
 
 	chrome.chromeContextCancel()
+
+	chrome.isClosed = true
 
 	return nil
 }

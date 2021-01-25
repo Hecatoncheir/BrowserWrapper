@@ -15,6 +15,7 @@ type Interface interface {
 	GetHtmlOfPage(url string) (string, error)
 	WaitElementAndGetHtmlOfPage(pageUrl, elementSelector string) (string, error)
 	Close() error
+	IsClosed() bool
 
 	GetTab(tabNumber int) (tab TabInterface, err error)
 	OpenTab() (tab TabInterface, tabNumber int, err error)

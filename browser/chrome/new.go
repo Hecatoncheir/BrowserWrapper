@@ -45,6 +45,7 @@ func New(proxyDetails string, isHeadless bool) *Chrome {
 	}
 
 	return &Chrome{
+		isClosed:            false,
 		chromeContext:       chromeContext,
 		chromeContextCancel: chromeContextCancel,
 		Downloader:          NewDownloader(proxyDetails, chromeContext),
