@@ -146,6 +146,10 @@ func (chrome *Chrome) IsClosed() bool {
 }
 
 func (chrome *Chrome) Close() error {
+	if chrome.isClosed {
+		return nil
+	}
+
 	for tabNumber := range chrome.Tabs {
 		err := chrome.CloseTab(tabNumber)
 		if err != nil {
